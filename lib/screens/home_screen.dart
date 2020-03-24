@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_food_delivery_ui/data/data.dart';
+import 'package:flutter_food_delivery_ui/screens/restaurant_screen.dart';
+import 'package:flutter_food_delivery_ui/widgets/rating_starts.dart';
 import 'package:flutter_food_delivery_ui/widgets/recent_orders.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -64,8 +66,100 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           RecentOrders(),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: Text(
+                  'Nearby Restuarants',
+                  style: TextStyle(
+                    fontSize: 24.0,
+                    letterSpacing: 1.2,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+              _buildRestuarants(),
+            ],
+          ),
         ],
       ),
+    );
+  }
+
+  Widget _buildRestuarants() {
+    return Column(
+      children: restaurants.map((restaurant) {
+        return GestureDetector(
+          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) {
+            return RestaurantScreen(restaurant: restaurant);
+          })),
+          child: Container(
+            margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10.0),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(15.0),
+              border: Border.all(
+                width: 1.0,
+                color: Colors.grey[200],
+              ),
+            ),
+            child: Row(
+              children: <Widget>[
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(15.0),
+                  child: Image(
+                    height: 150.0,
+                    width: 150.0,
+                    image: AssetImage(restaurant.imageUrl),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                Expanded(
+                  child: Container(
+                    margin: EdgeInsets.all(12.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          restaurant.name,
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        SizedBox(height: 4.0),
+                        RatingStarts(restaurant.rating),
+                        SizedBox(height: 6.0),
+                        Text(
+                          restaurant.address,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        SizedBox(height: 6.0),
+                        Text(
+                          '2.0 miles away',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      }).toList(),
     );
   }
 }
